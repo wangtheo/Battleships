@@ -1,11 +1,3 @@
-// Learning Processing
-// Daniel Shiffman
-// http://www.learningprocessing.com
-
-// Exercise 13-10: Develop the beginnings of a Tic-Tac-Toe game. Create a Cell object that 
-// can exist in one of two states: "O" or nothing. When you click on the cell, its state changes from 
-// nothing to  "O". Here is a framework to get you started.
-
 // A Cell object  
 class Cell  {   
   float x,y;  

@@ -1,4 +1,11 @@
-Cell[][] board;  
+/*Stuff we should work on:
+- AI
+- Implementing the stages of the game. Important stages include:
+  - Set-up: mainly placing the boats
+
+*/
+Cell[][] board; 
+Boat sub = new Boat(0, 0, 3);
 int cols = 21;  
 int rows = 10;  
 
@@ -7,7 +14,6 @@ void setup() {
 
   int w = width / cols;
   int h = height / rows;
-
   board = new Cell[cols][rows];
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
@@ -21,7 +27,7 @@ void setup() {
   */
 }   
 
-void draw() {   
+void draw() {  
   background(255);  
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
@@ -31,8 +37,9 @@ void draw() {
       else{
       board[i][j].display();
       }
-    }
+    } 
   }
+  sub.display();
 }   
 
 void mousePressed() {   
@@ -41,4 +48,13 @@ void mousePressed() {
       board[i][j].click(mouseX, mouseY);
     }
   }
-}  
+  sub.click(mouseX, mouseY);
+  for (int i = 0; i < cols; i++) {
+    for (int j = 0; j < rows; j++) {
+      sub.move(mouseX, mouseY, board[i][j]);
+    }
+  }
+} 
+void keyPressed(){
+  sub.key();
+}

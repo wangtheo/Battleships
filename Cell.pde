@@ -1,4 +1,9 @@
-// A Cell object  
+/* A Cell object
+state = 0: cell contains water
+state = 1: cell contains boat
+state = 2: water cell was fired at
+state = 3: boat cell was fired at
+*/
 class Cell  {   
   int x,y;  
   int w,h;  
@@ -12,12 +17,9 @@ class Cell  {
     h = tempH;
     state = 0; 
   }   
-  public int  getH(){
-    return h;
-  }
   void click(int mx, int my)  {   
     if (mx > x && mx < x + w && my > y && my < y + h) {
-      state = (state + 1) % 3; 
+      
     }
     
   }   
@@ -33,8 +35,7 @@ class Cell  {
       fill(48, 139, 206);
       rect(x,y,w,h);
     } else if (state == 1) {
-      fill(0, 139, 0);
-      rect(x,y,w,h);
+      ellipse(x+w/2,y+h/2,w-b,h-b);
     } else if (state == 2) {
       fill(0, 9, 206);
       rect(x,y,w,h);

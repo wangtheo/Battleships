@@ -1,60 +1,109 @@
-/*Stuff we should work on:
-- AI
-- Implementing the stages of the game. Important stages include:
-  - Set-up: mainly placing the boats
-
+/* The board
+- "Ocean" consists of 200 cells
+- Boats are: tugboat (2 cells), freighter (3 cells), submarine (4 cells) and destroyer (5 cells)
+- Before the boats are locked, they may be moved around or rotated. 
+- Boats are locked in place when the spacebar is pressed. 
+- After the boats are locked, the cells under them are set to state = 1
 */
-Cell[][] board; 
-Boat sub = new Boat(0, 0, 3);
+Cell[][] board1; 
+String msg;
+
+Boat tug = new Boat (0, 0, 2, false);
+boolean tugSelected;
+Boat freighter = new Boat (0, 60, 3, false);
+boolean freighterSelected;
+Boat sub = new Boat(0, 120, 4, false);
+boolean subSelected;
+Boat destroyer = new Boat (0, 180, 5, false);
+boolean destroyerSelected;
 int cols = 21;  
 int rows = 10;  
 
-void setup() {   
-  size(1200, 600);
+boolean lockBoats;
 
+void setup() {   
+  size(1260, 600);
   int w = width / cols;
   int h = height / rows;
-  board = new Cell[cols][rows];
+  board1 = new Cell[cols][rows];
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
-        board[i][j] = new Cell(i * w, j * h, w, h);
+        board1[i][j] = new Cell(i * w, j * h, w, h);
     }
   }
+  textSize(24);
+  msg = "Click the ships in the upper-lefthand corner to select them. \n Drag a selected ship to move it. Press r to rotate it. Press space when done.";
  /* for (int j = 0; j < rows; j++) {
-      board[10][j] =  stroke(0);
-      board[10][j] =  fill(0);
+      board1[10][j] =  stroke(0);
+      board1[10][j] =  fill(0);
   }
   */
 }   
 
 void draw() {  
+  tug.findCells(board1);
+  freighter.findCells(board1);
+  sub.findCells(board1);
+  destroyer.findCells(board1);
   background(255);  
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
       if(i==10){
-      board[i][j].display2();
+      board1[i][j].display2();
       }
       else{
-      board[i][j].display();
+      board1[i][j].display();
       }
     } 
   }
-  sub.display();
+  textAlign(CENTER, CENTER);
+  fill(0, 255, 0);
+  text(msg, width/2, 560);
+  tug.display(tugSelected);
+  freighter.display(freighterSelected);
+  sub.display(subSelected);
+  destroyer.display(destroyerSelected);
+  if (lockBoats){
+     for (int i = 0; i<tug.rectLength; i++){
+       tug.list[i].state = 1;
+     }
+     for (int i = 0; i<freighter.rectLength; i++){
+       freighter.list[i].state = 1;
+     }
+     for (int i = 0; i<sub.rectLength; i++){
+       sub.list[i].state = 1;
+     }
+     for (int i = 0; i<destroyer.rectLength; i++){
+       destroyer.list[i].state = 1;
+     }
+  }
 }   
 
 void mousePressed() {   
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
-      board[i][j].click(mouseX, mouseY);
+      board1[i][j].click(mouseX, mouseY);
     }
   }
-  sub.click(mouseX, mouseY);
-  for (int i = 0; i < cols; i++) {
-    for (int j = 0; j < rows; j++) {
-      sub.move(mouseX, mouseY, board[i][j]);
-    }
-  }
+  tugSelected = tug.select(mouseX, mouseY, lockBoats);
+  subSelected = sub.select(mouseX, mouseY, lockBoats);
+  freighterSelected = freighter.select(mouseX, mouseY, lockBoats);
+  destroyerSelected = destroyer.select(mouseX, mouseY, lockBoats);
+  
 } 
+void mouseDragged(){
+  tug.move(mouseX, mouseY, board1, tugSelected);
+  sub.move(mouseX, mouseY, board1, subSelected);
+  freighter.move(mouseX, mouseY, board1, freighterSelected);
+  destroyer.move(mouseX, mouseY, board1, destroyerSelected);
+}
+
 void keyPressed(){
-  sub.key();
+  tug.rotateBoat(key, tugSelected);
+  sub.rotateBoat(key, subSelected);
+  freighter.rotateBoat(key, freighterSelected);
+  destroyer.rotateBoat(key, destroyerSelected);
+  if (keyPressed == true && key == ' '){
+    lockBoats = true;
+  }
 }

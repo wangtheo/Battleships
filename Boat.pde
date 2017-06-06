@@ -37,18 +37,18 @@ class Boat{
      return false;
    }
    if(rotated == 0){
-     if (mx > x && mx < x + rectLength*width/cols && my > y && my < y +  height/rows) {
+     if (mx > x && mx < x + rectLength*width/cols && my > y && my < y +  (height-200)/rows) {
         selected = true;
       }
    } else {
-     if (mx > x && mx < x + width/cols && my > y && my < y + rectLength*height/rows) {
+     if (mx > x && mx < x + width/cols && my > y && my < y + rectLength*(height-200)/rows) {
        selected = true;
      }
    }
    return selected;
   }
   void rotateBoat (char a, boolean selected){
-    if (selected && y+rectLength*(height/rows) <= 600 && x+rectLength*(width/cols) <= 600){
+    if (selected && y+rectLength*((height-200)/rows) <= 600 && x+rectLength*(width/cols) <= 600){
       if (a == 'r' || a == 'R'){
         if (rotated == 0){
           rotated = 1;
@@ -67,9 +67,9 @@ class Boat{
     fill(255,0,0,63);
     if (!hide){
       if (rotated%2 == 0){
-       rect(x, y, rectLength*(width/cols), height/rows);
+       rect(x, y, rectLength*(width/cols), (height-200)/rows);
       } else {
-       rect(x, y, width/cols, rectLength*(height/rows));
+       rect(x, y, width/cols, rectLength*((height-200)/rows));
       }
     }
   }
@@ -78,18 +78,48 @@ class Boat{
     for (int i = 0; i < 21; i++){
       for (int j = 0; j< 10; j++){
         if (rotated%2 == 0){
-          if (c[i][j].x >= x && c[i][j].x < x+rectLength*(width/cols) && c[i][j].y >= y && c[i][j].y < y +height/rows){
+          if (c[i][j].x >= x && c[i][j].x < x+rectLength*(width/cols) && c[i][j].y >= y && c[i][j].y < y +(height-200)/rows){
             list[a] = c[i][j];
             a++;
+            System.out.println(i+" "+j);
           }
         } else {
-          if (c[i][j].x >= x && c[i][j].x < x+(width/cols) && c[i][j].y >= y && c[i][j].y < y+rectLength*(height/rows)){
+          if (c[i][j].x >= x && c[i][j].x < x+(width/cols) && c[i][j].y >= y && c[i][j].y < y+rectLength*((height-200)/rows)){
             list[a] = c[i][j];
             a++;
+            System.out.println(i+" "+j);
           }
         }
       }
     }     
+  }
+  void setState(boolean lockBoats){
+    if (lockBoats){
+      for (int i = 0; i<rectLength; i++){
+        if (list[i].state == 0){
+          list[i].state = 1;
+        }
+      }
+    }
+  }
+  void randomPlace(){
+    rotated = (int)random(2);
+    if (rotated == 0){
+      x = 660+60*(int)random(11-rectLength);
+      y = 60*(int)random(10);
+    } else {
+      x = 660+60*(int)random(10);
+      y = 60*(int)random(11-rectLength);
+    }
+  }
+  boolean sunk(){
+    boolean boatSunk = true;
+    for (int i = 0; i<rectLength; i++){ 
+      if (list[i].state != 3){
+        boatSunk = false;
+      }
+    }
+    return boatSunk;
   }
   void move(int mx, int my, Cell[][] c, boolean selected){
     if (selected){

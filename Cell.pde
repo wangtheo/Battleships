@@ -17,11 +17,12 @@ class Cell  {
     h = tempH;
     state = 0; 
   }   
-  void click(int mx, int my)  {   
-    if (mx > x && mx < x + w && my > y && my < y + h) {
-      
+  void click(int mx, int my, boolean lockBoats)  {   
+    if (mx > x && mx < x + w && my > y && my < y + h && lockBoats) {
+      if (state == 0 || state == 1){
+        state = state + 2;
+      }
     }
-    
   }   
 
   void display()  {   
@@ -32,13 +33,14 @@ class Cell  {
     int b = 8;
     
     if (state == 0) {
-      fill(48, 139, 206);
-      rect(x,y,w,h);
+      //nothing happens
     } else if (state == 1) {
-      ellipse(x+w/2,y+h/2,w-b,h-b);
+      //nothing happens
     } else if (state == 2) {
-      fill(0, 9, 206);
-      rect(x,y,w,h);
+      ellipse(x+w/2,y+h/2,w-b,h-b);
+    } else if (state == 3){
+      line(x+b,y+b,x+w-b,y+h-b);
+      line(x+w-b,y+b,x+b,y+h-b);
     }
   }
     void display2(){   
@@ -55,6 +57,9 @@ class Cell  {
       ellipse(x+w/2,y+h/2,w-b,h-b);
     } else if (state == 2) {
       // Draw an X
+      line(x+b,y+b,x+w-b,y+h-b);
+      line(x+w-b,y+b,x+b,y+h-b); 
+    } else if (state == 3){
       line(x+b,y+b,x+w-b,y+h-b);
       line(x+w-b,y+b,x+b,y+h-b); 
     }
